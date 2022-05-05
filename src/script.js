@@ -2,6 +2,23 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+/*
+ * Audio
+*/
+const audioContext = new AudioContext();
+const audioElement = document.querySelector('audio');
+const track = audioContext.createMediaElementSource(audioElement);
+
+const gainNode = audioContext.createGain()
+gainNode.gain.value = 0.5
+
+const analyser = audioContext.createAnalyser()
+
+track.connect(gainNode).connect(audioContext.destination);
+track.connect(analyser);
+analyser.connect(audioContext.destination)
+
+
 /**
  * Texture
  */
@@ -30,8 +47,8 @@ const scene = new THREE.Scene()
 /**
  * Objects
  */
-let planets = new Array(8)
-let planetsOrbit = new Array(8)
+let planets = new Array()
+let planetsOrbit = new Array()
 // Material
 const planeMaterial = new THREE.MeshStandardMaterial({
     color: 0x000000
@@ -172,31 +189,49 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
-    const elapsedTime = clock.getElapsedTime()
 
-    // Update objects
-        // update Sun
-        sunMesh.position.y = (Math.sin(elapsedTime) * 0.1) - 0.6
-        sunLight.position.y = (Math.sin(elapsedTime) * 0.1) - 0.6
-        // update planets
-        planets.forEach(planet => {
-            let index = planets.indexOf(planet)
-            let orbit = planetsOrbit[index]
-            let speed = 1 / planetsOrbit[index] 
-            planet.position.x = (Math.sin(elapsedTime*speed) * orbit)
-            planet.position.z = (Math.cos(elapsedTime*speed) * orbit)
-        })
+window.addEventListener('click', () => {
+    audioElement.play()
+    
+    analyser.fftSize = 64
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
 
-    // Update controls
-    controls.update()
+    const tick = () =>
+        {
+            analyser.getByteFrequencyData(dataArray);
+            for(let i = 0; i < bufferLength; i++) {
 
-    // Render
-    renderer.render(scene, camera)
+            }
+            sunMesh.scale.x = 1 + dataArray[16] / 255
+            sunMesh.scale.y = 1 + dataArray[16] / 255
+            sunMesh.scale.z = 1 + dataArray[16] / 255
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
-}
+            const factor = dataArray[16] / 512
 
-tick()
+            const elapsedTime = clock.getElapsedTime()
+
+            // Update objects
+                // update Sun
+                sunMesh.position.y = (Math.sin(elapsedTime) * 0.1) - 0.6
+                sunLight.position.y = (Math.sin(elapsedTime) * 0.1) - 0.6
+                // update planets
+                planets.forEach(planet => {
+                    let index = planets.indexOf(planet)
+                    let orbit = planetsOrbit[index]
+                    let speed = 1 / (planetsOrbit[index])
+                    planet.position.x = (Math.sin(elapsedTime*speed) * orbit)
+                    planet.position.z = (Math.cos(elapsedTime*speed) * orbit)
+                })
+
+            // Update controls
+            controls.update()
+
+            // Render
+            renderer.render(scene, camera)
+
+            // Call tick again on the next frame
+            window.requestAnimationFrame(tick)
+        }
+    tick()
+})
