@@ -16,7 +16,7 @@ const analyser = audioContext.createAnalyser()
 
 track.connect(gainNode).connect(audioContext.destination);
 track.connect(analyser);
-analyser.connect(audioContext.destination)
+// analyser.connect(audioContext.destination)
 
 
 /**
