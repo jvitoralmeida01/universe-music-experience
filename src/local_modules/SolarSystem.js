@@ -1,10 +1,11 @@
 import * as THREE from 'three'
 
 export default class SolarSystem {
-    constructor() {
-        this.sun = this.sun()
+    constructor(origin) {
+
+        this.sun = this.sunCreator(origin.x, origin.y, origin.z)
     }
-    static  sun = () => {
+    static sunCreator = () => {
         const sunMesh = new THREE.Mesh(
             new THREE.SphereGeometry(0.1, 32, 32),
             new THREE.MeshBasicMaterial({color: 0xffff77})
