@@ -1,8 +1,13 @@
-# How to run:
+# The main branch contains only the deployed version:
+
+### In order to see the developer version, please check the "developer" branch
+
+
+# How to run (the developer version on branch "developer"):
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
+Run the following commands:
 
 ``` bash
 # Install dependencies (only the first time)
