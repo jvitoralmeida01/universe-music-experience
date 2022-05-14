@@ -1,6 +1,6 @@
 # The main branch contains only the deployed version:
 
-## In order to see the developer version, please check the "developer" branch
+### In order to see the developer version, please check the "developer" branch
 
 
 # How to run (the developer version on branch "developer"):
