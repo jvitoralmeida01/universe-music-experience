@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 
 export default class Stars{
-    constructor(radius, textureLoader) {
+    constructor(radius, textureLoader, parameters) {
 
-        const colorTexture = textureLoader.load('./textures/star.png');
+        const colorTexture = textureLoader.load('./textures/' + 'star' + '.png');
         // when using NearestFilter as the minFilter we dont need to generate the mipmaps (better for the GPU)
         colorTexture.generateMipmaps = false
         colorTexture.minFilter = THREE.NearestFilter
@@ -37,7 +37,7 @@ export default class Stars{
         geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 
         this.particles = new THREE.Points( geometry, new THREE.PointsMaterial({
-            size: 1,
+            size: parameters?.size || 1,
             color: 0xddffff,
             map: colorTexture,
         }));

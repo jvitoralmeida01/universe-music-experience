@@ -8,6 +8,12 @@ import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass
 import SolarSystem from './local_modules/SolarSystem';
 import Stars from './local_modules/Stars';
 
+/**
+ * Buttons
+ */
+ const playButton = document.querySelector('button.play');
+ const randomizeButton = document.querySelector('button.randomize');
+
 /*
  * Audio
 */
@@ -44,12 +50,16 @@ const scene = new THREE.Scene()
 const stars_firstLayer = new Stars(80, textureLoader);
 const stars0 = new Stars(100, textureLoader);
 const stars_lastLayer = new Stars(120, textureLoader);
+const nebulae = new Stars(10, textureLoader, {
+    texturePath: 'nebula',
+    size: 10
+});
 
 // Solar System
 const solarSystem = new SolarSystem(new THREE.Vector3(0, 0, 0), textureLoader)
 solarSystem.sun.light.layers.set(1)
 
-scene.add(...solarSystem.planets, solarSystem.sun.mesh, solarSystem.sun.light, stars_firstLayer.particles, stars0.particles, stars_lastLayer.particles);
+scene.add(...solarSystem.planets, solarSystem.sun.mesh, solarSystem.sun.light, stars_firstLayer.particles, stars0.particles, stars_lastLayer.particles, nebulae.particles);
 
 /**
  * Lights
@@ -96,6 +106,8 @@ scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
+controls.minDistance = 10
+controls.maxDistance = 80
 controls.enableDamping = true
 
 /**
@@ -138,17 +150,25 @@ stars_lastLayer.particles.layers.set(1);
  */
 const clock = new THREE.Clock()
 
-// // renderer.render(scene, camera)
-// camera.layers.set(1)
-// bloomComposer.render()
+// Play Song
+playButton.addEventListener('click', () => {
+    console.log(audioElement.readyState)
+    audioElement.play()
+    document.querySelector('.webgl').style['z-index'] = '10'
+})
 
-window.addEventListener('click', () => {
+// Randomize system
+randomizeButton.addEventListener('click', () => {
+    location.reload()
+})
+
+window.addEventListener('load', () => {
 
     // if(!audioElement.paused) {
     //     audioElement.pause()
     // }
 
-    audioElement.play()
+    // audioElement.play()
     
     analyser.fftSize = 64
     const bufferLength = analyser.frequencyBinCount;
