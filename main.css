@@ -7,11 +7,44 @@
 html,
 body
 {
+    position: fixed;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.514);
+}
+
+button
+{
+    position: relative;
+
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 50px;
+    transform: translateY(50%);
+    padding: 25px 50px;
+    font-size: 50px;
+  
+    overflow: hidden;
+  
+    border-width: 0;
+    outline: none;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+ 
+    background-color: #949494;
+    color: #000000;
+
+    transition: .3s;
+}
+
+button:hover {
+    background-color: #ffffff;
 }
 
 .webgl
 {
+    z-index: -1;
     position: fixed;
     top: 0;
     left: 0;
